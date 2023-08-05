@@ -55,3 +55,66 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
         return nil
     }
 }
+class LeadingCommentExtractor: SourceCodeParsable {
+    typealias Input = SyntaxProtocol
+    typealias Output = Swift.Comment
+    var url: URL
+    var syntax: Input
+    required init?(syntax: Input, url: URL) {
+        self.url = url
+        self.syntax = syntax
+    }
+    func parse() -> Swift.Comment? {
+        guard let trivia = syntax.leadingTrivia else { return nil }
+        return .init(
+            lineComment: trivia.lineCommentText,
+            blockComment: trivia.blockCommentText,
+            docLineComment: trivia.docLineCommentText,
+            docBlockComment: trivia.docBlockCommentText
+        )
+    }
+}
+class TrailingCommentExtractor: SourceCodeParsable {
+    typealias Input = SyntaxProtocol
+    typealias Output = Swift.Comment
+    var url: URL
+    var syntax: Input
+    required init?(syntax: Input, url: URL) {
+        self.url = url
+        self.syntax = syntax
+    }
+    func parse() -> Swift.Comment? {
+        guard let trivia = syntax.leadingTrivia else { return nil }
+        return .init(
+            lineComment: trivia.lineCommentText,
+            blockComment: trivia.blockCommentText,
+            docLineComment: trivia.docLineCommentText,
+            docBlockComment: trivia.docBlockCommentText
+        )
+    }
+}
+class CommentExtractor: SourceCodeParsable {
+    typealias Input = SyntaxProtocol
+    typealias Output = Swift.CodeComment
+    
+    var url: URL
+    var syntax: Input
+    var leadingCommentExtractor: LeadingCommentExtractor
+    var trailingCommentExtractor: TrailingCommentExtractor
+    required init?(syntax: Input, url: URL) {
+        guard let trailingCommentExtractor = TrailingCommentExtractor(syntax: syntax, url: url) else {return nil}
+        guard let leadingCommentExtractor = LeadingCommentExtractor(syntax: syntax, url: url) else {return nil}
+        self.url = url
+        self.syntax = syntax
+        self.leadingCommentExtractor = leadingCommentExtractor
+        self.trailingCommentExtractor = trailingCommentExtractor
+    }
+    func parse() -> Output? {
+        guard let leadingComment = leadingCommentExtractor.parse() else {return nil}
+        guard let trailingComment = trailingCommentExtractor.parse() else {return nil}
+        return .init(
+            leadingComments: leadingComment,
+            trailingComments: trailingComment
+        )
+    }
+}

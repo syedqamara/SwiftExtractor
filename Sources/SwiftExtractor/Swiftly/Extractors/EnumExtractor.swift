@@ -42,6 +42,7 @@ extension SwiftExtractor {
                 access: .none,
                 functions: functionsExtractor.parse() ?? [],
                 attributes: propertiesExtractor.parse() ?? [],
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
                 declarationSyntax: .enums(syntax),
                 generics: generics
             )

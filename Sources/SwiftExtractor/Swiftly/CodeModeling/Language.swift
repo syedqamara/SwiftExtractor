@@ -19,8 +19,19 @@ protocol Language {
     var inheritances: [CodeType] {get set}
     var conformance: [CodeType] {get set}
 }
+protocol Commenting {
+    var lineComment: String { get }
+    var blockComment: String { get }
+    var docLineComment: String { get }
+    var docBlockComment: String { get }
+}
+protocol CodeCommenting {
+    var leadingComments: Commenting? { get set }
+    var trailingComments: Commenting? { get set }
+}
 protocol Sourcable {
     var url: URL { get set }
+    var comment: CodeCommenting? { get set }
 }
 protocol CodeType: Sourcable {
     var name: String {get set}

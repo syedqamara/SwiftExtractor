@@ -36,7 +36,8 @@ extension SwiftExtractor {
                 return: returnType,
                 accessModifier: .internal,
                 wrapper: nil,
-                parameters: parameters, declatationSyntax: syntax
+                parameters: parameters, declatationSyntax: syntax,
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse()
             )
         }
     }
@@ -62,15 +63,15 @@ extension SwiftExtractor {
         
         var url: URL
         var syntax: FunctionParameterListSyntax.Element
-        private var propertyTypeExtractor: SwiftExtractor.PropertyExtractor.PropertyTypeExtractor?
+        private var parameterTypeExtractor: SwiftExtractor.PropertyExtractor.ParameterTypeExtractor?
         required init?(syntax: SwiftSyntax.FunctionParameterListSyntax.Element, url: URL) {
             self.url = url
             guard let type = syntax.type else {return nil}
             self.syntax = syntax
-            self.propertyTypeExtractor = .init(syntax: type, url: url)
+            self.parameterTypeExtractor = .init(syntax: type, url: url)
         }
         func parse() -> Swift.Function.Parameter? {
-            guard let type = propertyTypeExtractor?.parse() else {return nil}
+            guard let type = parameterTypeExtractor?.parse() else {return nil}
             guard let firstName = syntax.firstName else { return nil }
             let secondName = syntax.secondName?.text
             let parameterName = firstName.text
@@ -84,7 +85,9 @@ extension SwiftExtractor {
                     kind: type,
                     accessModifier: .none,
                     wrapper: nil,
-                    isOptional: type.isOptional, declatationSyntax: syntax
+                    isOptional: type.isOptional,
+                    declatationSyntax: syntax,
+                    comment: CommentExtractor(syntax: syntax, url: url)?.parse()
                 )
             )
         }
@@ -99,7 +102,13 @@ extension SwiftExtractor {
             self.syntax = syntax
         }
         func parse() -> Swift.PropertyType? {
-            var propertyType = Swift.PropertyType(url: url, name: "", constraint: .none, isOptional: false)
+            var propertyType = Swift.PropertyType(
+                url: url,
+                name: "",
+                constraint: .none,
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
+                isOptional: false
+            )
             if let sugarType = syntax.as(ConstrainedSugarTypeSyntax.self) {
                 if let type = sugarType.baseType.as(SimpleTypeIdentifierSyntax.self) {
                     propertyType.name(type.name.text)

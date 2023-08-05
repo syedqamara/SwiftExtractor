@@ -17,6 +17,73 @@ class SwiftVisitor: SyntaxVisitor {
         self.url = url
         super.init(viewMode: viewMode)
     }
+    override func visit(_ node: BooleanLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: IntegerLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: FloatLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: StringLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: NilLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: SpecializeExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: RegexLiteralExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: KeyPathExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: MacroExpansionExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: PostfixIfConfigExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    override func visit(_ node: EditorPlaceholderExprSyntax) -> SyntaxVisitorContinueKind {
+        if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
+            entities.append(extracted)
+        }
+        return .visitChildren
+    }
+    
     override func visit(_ node: GenericParameterClauseSyntax) -> SyntaxVisitorContinueKind {
         if let extracted = SwiftExtractor(syntax: node, url: url)?.parse() {
             entities.append(extracted)

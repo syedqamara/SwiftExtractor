@@ -46,3 +46,38 @@ extension VariableDeclSyntax {
         }
     }
 }
+
+extension Trivia {
+    var lineCommentText: String {
+        self.compactMap { triviaPiece in
+            if case .lineComment(let text) = triviaPiece {
+                return text
+            }
+            return nil
+        }.joined(separator: ", ")
+    }
+    var docLineCommentText: String {
+        self.compactMap { triviaPiece in
+            if case .docLineComment(let text) = triviaPiece {
+                return text
+            }
+            return nil
+        }.joined(separator: ", ")
+    }
+    var blockCommentText: String {
+        self.compactMap { triviaPiece in
+            if case .blockComment(let text) = triviaPiece {
+                return text
+            }
+            return nil
+        }.joined(separator: ", ")
+    }
+    var docBlockCommentText: String {
+        self.compactMap { triviaPiece in
+            if case .docBlockComment(let text) = triviaPiece {
+                return text
+            }
+            return nil
+        }.joined(separator: ", ")
+    }
+}

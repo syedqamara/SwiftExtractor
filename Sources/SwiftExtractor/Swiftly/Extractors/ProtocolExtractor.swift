@@ -32,7 +32,9 @@ extension SwiftExtractor {
                 type: .protocol,
                 access: .none,
                 functions: functionsExtractor.parse() ?? [],
-                attributes: propertiesExtractor.parse() ?? [], declarationSyntax: .protocols(syntax)
+                attributes: propertiesExtractor.parse() ?? [],
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
+                declarationSyntax: .protocols(syntax)
             )
         }
     }

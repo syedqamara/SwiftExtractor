@@ -22,11 +22,10 @@ extension SwiftExtractor {
         var accessExtractor: PropertyAccessModifierExtractor
         required init?(syntax: VariableDeclSyntax, url: URL) {
             self.url = url
-            guard let type = syntax.bindings.first?.typeAnnotation?.type else  { return nil }
             guard let nameSyntax = syntax.bindings.first?.pattern.as(IdentifierPatternSyntax.self) else {return nil}
             self.syntax = syntax
             self.nameExtractor = .init(syntax: nameSyntax, url: url)
-            self.typeExtractor = .init(syntax: type, url: url)
+            self.typeExtractor = .init(syntax: syntax, url: url)
             self.accessExtractor = .init(syntax: syntax, url: url)
         }
         func parse() -> Swift.Property? {
@@ -39,7 +38,9 @@ extension SwiftExtractor {
                 kind: type,
                 accessModifier: accessModifier,
                 wrapper: nil,
-                isOptional: getIsOptional(), declatationSyntax: syntax
+                isOptional: getIsOptional(),
+                declatationSyntax: syntax,
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse()
             )
         }
         private func getName() -> String? {
@@ -76,22 +77,6 @@ extension SwiftExtractor {
         }
     }
 }
-//import SwiftSyntax
-//
-//class VariableInfoExtractor {
-//    var variableInfo: (name: String, type: String)?
-//
-//    func visit(_ node: VariableDeclSyntax) {
-//        if let variable = node.bindings.first,
-//           let variableName = variable.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
-//           let type = variable.initializer?.value.as(IntegerLiteralExprSyntax.self) {
-//            type.description
-////                let typeName = type.description.trimmingCharacters(in: .whitespacesAndNewlines)
-////                variableInfo = (name: variableName, type: typeName)
-//            }
-//        }
-//    }
-//}
 extension SwiftExtractor.PropertyExtractor {
     class PropertyNameExtractor: SourceCodeParsable {
         typealias Input = IdentifierPatternSyntax
@@ -106,7 +91,79 @@ extension SwiftExtractor.PropertyExtractor {
             self.syntax = syntax
         }
     }
+    
     class PropertyTypeExtractor: SourceCodeParsable {
+        typealias Input = VariableDeclSyntax
+        typealias Output = Swift.PropertyType
+        var url: URL
+        var syntax: VariableDeclSyntax
+        required init(syntax: VariableDeclSyntax, url: URL) {
+            self.url = url
+            self.syntax = syntax
+        }
+        func parse() -> Swift.PropertyType? {
+            
+            var propertyType = Swift.PropertyType(
+                url: url,
+                name: "",
+                constraint: .none,
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
+                isOptional: syntax.isOptional
+            )
+            
+            if let type = syntax.bindings.first?.typeAnnotation?.type, let typeName = parseSimplePropertyTypeName(syntax: type) {
+                propertyType.name = typeName
+                propertyType.constraint = parsePropertyConstraints(syntax: type)
+            }
+            else {
+                if let binding = syntax.bindings.first as? ExprSyntaxProtocol {
+                    switch binding {
+                    case let type as IntegerLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.digits.text
+                    case let type as StringLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.segments.description
+                    case let type as NilLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.nilKeyword.text
+                    case let type as FloatLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.floatingDigits.text
+                    case let type as BooleanLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.booleanLiteral.text
+                    case let type as RegexLiteralExprSyntax:
+                        propertyType.name = type.kind.nameForDiagnostics ?? "Unknown_Type"
+                        propertyType.name = type.regex.text
+                    default:
+                        // Handle other cases
+                        break
+                    }
+                }
+
+            }
+            
+            return nil
+        }
+        private func parseSimplePropertyTypeName(syntax: TypeSyntax) -> String? {
+            if let sugarType = syntax.as(ConstrainedSugarTypeSyntax.self) {
+                if let type = sugarType.baseType.as(SimpleTypeIdentifierSyntax.self) {
+                    return type.name.text
+                }
+            }
+            else if let type = syntax.as(SimpleTypeIdentifierSyntax.self) {
+                return type.name.text
+            }
+            return syntax.description
+        }
+        private func parsePropertyConstraints(syntax: TypeSyntax) -> Swift.PropertyType.Constraint {
+            guard let sugarType = syntax.as(ConstrainedSugarTypeSyntax.self) else { return .none }
+            guard let constraint = Swift.PropertyType.Constraint(rawValue: sugarType.someOrAnySpecifier.text) else { return .none }
+            return constraint
+        }
+    }
+    class ParameterTypeExtractor: SourceCodeParsable {
         typealias Input = TypeSyntax
         typealias Output = Swift.PropertyType
         var url: URL
@@ -116,7 +173,13 @@ extension SwiftExtractor.PropertyExtractor {
             self.syntax = syntax
         }
         func parse() -> Swift.PropertyType? {
-            var propertyType = Swift.PropertyType(url: url, name: "", constraint: .none, isOptional: false)
+            var propertyType = Swift.PropertyType(
+                url: url,
+                name: "",
+                constraint: .none,
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
+                isOptional: false
+            )
             if let sugarType = syntax.as(ConstrainedSugarTypeSyntax.self) {
                 if let type = sugarType.baseType.as(SimpleTypeIdentifierSyntax.self) {
                     propertyType.name(type.name.text)
@@ -134,6 +197,7 @@ extension SwiftExtractor.PropertyExtractor {
             return propertyType.name.isEmpty ? nil : propertyType
         }
     }
+    
     class PropertyAccessModifierExtractor: SourceCodeParsable {
         typealias Output = Swift.AccessModifiers
         typealias Input = VariableDeclSyntax
@@ -149,6 +213,3 @@ extension SwiftExtractor.PropertyExtractor {
         }
     }
 }
-
-
-

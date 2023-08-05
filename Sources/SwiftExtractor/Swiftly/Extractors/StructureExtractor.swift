@@ -32,7 +32,9 @@ extension SwiftExtractor {
                 type: .struct,
                 access: .none,
                 functions: functionsExtractor.parse() ?? [],
-                attributes: propertiesExtractor.parse() ?? [], declarationSyntax: .structs(syntax)
+                attributes: propertiesExtractor.parse() ?? [],
+                comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
+                declarationSyntax: .structs(syntax)
             )
         }
     }

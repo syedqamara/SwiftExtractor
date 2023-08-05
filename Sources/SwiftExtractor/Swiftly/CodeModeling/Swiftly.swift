@@ -43,6 +43,16 @@ public class Swift: Language {
 }
 
 extension Swift {
+    struct Comment: Commenting {
+        var lineComment: String
+        var blockComment: String
+        var docLineComment: String
+        var docBlockComment: String
+    }
+    struct CodeComment: CodeCommenting {
+        var leadingComments: Commenting?
+        var trailingComments: Commenting?
+    }
     public enum Swiftype: String, Types {
     case `class` = "class"
     case `struct` = "struct"
@@ -89,6 +99,7 @@ extension Swift {
         var access: AccessModifiers
         var functions: [Swift.Function]
         var attributes: [Swift.Property]
+        var comment: CodeCommenting?
         var declarationSyntax: SwiftDeclarations
         var generics: [GenericType] = []
     }
@@ -99,11 +110,13 @@ extension Swift {
         var url: URL
         var name: String
         var type: String?
+        var comment: CodeCommenting?
     }
     public struct PropertyType: Sourcable {
         var url: URL
         var name: String // The name of the DataType
         var constraint: Constraint // The name of the DataType
+        var comment: CodeCommenting?
         var isOptional: Bool // The isOptional of the DataType
         
         mutating func name(_ name: String) {
@@ -130,9 +143,7 @@ extension Swift {
         let wrapper: Wrapper?
         let isOptional: Bool // The isOptional of the variable
         let declatationSyntax: SyntaxProtocol
-        func getDeclarationStyle(space: String = "") -> String {
-            declatationSyntax.description.abstractCode()
-        }
+        var comment: CodeCommenting?
     }
     public struct Function: Functionality {
         var url: URL
@@ -143,9 +154,7 @@ extension Swift {
         let parameters: [Parameter]
         let declatationSyntax: SyntaxProtocol
         var generics: [GenericType] = []
-        func getDeclarationStyle(space: String = "") -> String {
-            declatationSyntax.description.abstractCode()
-        }
+        var comment: CodeCommenting?
     }
 }
 
@@ -154,7 +163,7 @@ extension Swift.Function {
         var url: URL
         let name: String
         let property: Swift.Property
-        func getDeclarationStyle() -> String {property.getDeclarationStyle()}
+        var comment: CodeCommenting?
     }
 }
 extension Swift.PropertyType {
