@@ -21,7 +21,7 @@ final class SwiftClassExtractorTests: BaseTestCase {
     
     // MARK: - Simple Single Generic
     func testIsSimpleGenericWithSingleGenericType() async throws {
-        let result = try await parse(code: .simple)
+        let result = try await parse(code: GenericClassTestState.simple)
         if let first = result.first {
             try testIsClass(swift: first)
             try testHaveVariables(swift: first)
@@ -35,7 +35,7 @@ final class SwiftClassExtractorTests: BaseTestCase {
     }
     // MARK: - Specialised Single Generic
     func testIsSpecialisedGenericWithSingleGenericType() async throws {
-        let result = try await parse(code: .specialised)
+        let result = try await parse(code: GenericClassTestState.specialised)
         if let first = result.first {
             try testIsClass(swift: first)
             try testHaveVariables(swift: first)
@@ -49,7 +49,7 @@ final class SwiftClassExtractorTests: BaseTestCase {
     }
     // MARK: - Simple Multiple Generic
     func testIsSimpleGenericWithMultipleGenericType() async throws {
-        let result = try await parse(code: .simpleMultipleArgument)
+        let result = try await parse(code: GenericClassTestState.simpleMultipleArgument)
         if let first = result.first {
             try testIsClass(swift: first)
             try testHaveVariables(swift: first)
@@ -64,7 +64,7 @@ final class SwiftClassExtractorTests: BaseTestCase {
     // MARK: - Specialised Multiple Generic
     
     func testIsSpecialisedGenericWithMultipleGenericType() async throws {
-        let result = try await parse(code: .specliasedMultipleArgument)
+        let result = try await parse(code: GenericClassTestState.specliasedMultipleArgument)
         if let first = result.first {
             try testIsClass(swift: first)
             try testHaveVariables(swift: first)
@@ -79,7 +79,7 @@ final class SwiftClassExtractorTests: BaseTestCase {
     // MARK: - Simple & Specialised Multiple Generic
     
     func testIsSimpleAndSpecialisedGenericWithMultipleGenericType() async throws {
-        let result = try await parse(code: .simpleSpecialMixed)
+        let result = try await parse(code: GenericClassTestState.simpleSpecialMixed)
         if let first = result.first {
             try testIsClass(swift: first)
             try testHaveVariables(swift: first)
