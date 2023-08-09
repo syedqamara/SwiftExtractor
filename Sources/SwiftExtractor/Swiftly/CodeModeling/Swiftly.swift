@@ -17,15 +17,15 @@ public enum SwiftDeclarations {
     
     var code: String {
         switch self {
-        case .classes(let declSyntax):
+        case .classes(var declSyntax):
             return declSyntax.description
-        case .structs(let declSyntax):
+        case .structs(var declSyntax):
             return declSyntax.description
-        case .protocols(let declSyntax):
+        case .protocols(var declSyntax):
             return declSyntax.description
-        case .enums(let declSyntax):
+        case .enums(var declSyntax):
             return declSyntax.description
-        case .sourceFile(let declSyntax):
+        case .sourceFile(var declSyntax):
             return declSyntax.description
         }
     }
@@ -137,40 +137,50 @@ extension Swift {
             self.isOptional = isOptional
         }
     }
-    public struct Wrapper {
+    public struct Wrapper: Wrappable {
+        public var url: URL
         public var name: String
         public var kind: PropertyType
         public var _kind: PropertyType
         public var _$kind: PropertyType
     }
     public struct Property: Attributes {
+        public typealias _PropertyType_ = PropertyType
+        public typealias _WrapperType_ = Wrapper
+        public typealias _ModifierType_ = AccessModifiers
         public var url: URL
-        public let name: String // The name of the variable
-        public let kind: PropertyType // The kind of the variable
-        public let accessModifier: AccessModifiers // The accessModifier of the variable
-        public let wrapper: Wrapper?
-        public let isOptional: Bool // The isOptional of the variable
-        public let declatationSyntax: SyntaxProtocol
+        public var name: String // The name of the variable
+        public var kind: _PropertyType_ // The kind of the variable
+        public var accessModifier: _ModifierType_ // The accessModifier of the variable
+        public var wrapper: _WrapperType_?
+        public var isOptional: Bool // The isOptional of the variable
+        public var declatationSyntax: SyntaxProtocol
         public var comment: CodeCommenting?
     }
     public struct Function: Functionality {
+        public typealias _PropertyType_ = PropertyType
+        public typealias _ModifierType_ = AccessModifiers
+        public typealias _WrapperType_ = Wrapper
+        public typealias _FunctionParameter_ = Parameter
+        
         public var url: URL
         public var name: String // The name of the Method
-        public let `return`: PropertyType? // The kind of the Method
-        public let accessModifier: AccessModifiers // The accessModifier of the Method
-        public let wrapper: Wrapper?
-        public let parameters: [Parameter]
-        public let declatationSyntax: SyntaxProtocol
+        public var `return`: PropertyType? // The kind of the Method
+        public var accessModifier: AccessModifiers // The accessModifier of the Method
+        public var wrapper: Wrapper?
+        public var parameters: [Parameter]
+        public var declatationSyntax: SyntaxProtocol
         public var generics: [GenericType] = []
         public var comment: CodeCommenting?
     }
 }
 
 extension Swift.Function {
-    public struct Parameter: Sourcable {
+    public struct Parameter: FunctionParameter {
+        public typealias AttributeType = Swift.Property
         public var url: URL
-        public let name: String
-        public let property: Swift.Property
+        public var name: String
+        public var property: Swift.Property
         public var comment: CodeCommenting?
     }
 }

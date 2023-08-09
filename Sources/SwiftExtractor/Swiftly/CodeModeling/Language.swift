@@ -34,17 +34,20 @@ public protocol CodeCommenting {
     var leadingComments: Commenting? { get set }
     var trailingComments: Commenting? { get set }
 }
-public protocol Sourcable {
+public protocol Sourcable: CodeIdentifiable {
     var url: URL { get set }
     var comment: CodeCommenting? { get set }
 }
-public protocol CodeType: Sourcable {
+public protocol CodeIdentifiable {
     var name: String {get set}
 }
-public protocol GenericType: CodeType {
+public protocol CodeType: Sourcable {
+
+}
+public protocol GenericType: Sourcable {
     var type: String? {get set}
 }
-public protocol Genericable: CodeType {
+public protocol Genericable: Sourcable {
     var generics: [GenericType] { get set }
 }
 public protocol Interface: Genericable {
@@ -62,10 +65,30 @@ public protocol Implementation: Interface {
     
 }
 public protocol Functionality: Genericable {
+    associatedtype _PropertyType_: Sourcable
+    associatedtype _ModifierType_: Access
+    associatedtype _WrapperType_: Wrappable
+    associatedtype _FunctionParameter_: FunctionParameter
     
+    var `return`: _PropertyType_? {get}
+    var accessModifier: _ModifierType_ {get}
+    var wrapper: _WrapperType_? {get}
+    var parameters: [_FunctionParameter_] {get}
 }
+public protocol FunctionParameter: Sourcable {
+    associatedtype AttributeType: Attributes
+    var property: AttributeType { get }
+}
+
 public protocol Attributes: Sourcable {
-    
+    associatedtype _PropertyType_: Sourcable
+    associatedtype _ModifierType_: Access
+    associatedtype _WrapperType_: Wrappable
+    var kind: _PropertyType_ {get}
+    var accessModifier: _ModifierType_ {get}
+    var wrapper: _WrapperType_? {get}
+    var isOptional: Bool {get}
 }
 public protocol Access: RawValue {}
 public protocol Types: RawValue {}
+public protocol Wrappable: CodeIdentifiable {}
