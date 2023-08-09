@@ -12,8 +12,13 @@ protocol RawValue {
     associatedtype R
     var rawValue: R {get}
 }
-
-protocol Language {
+protocol Packagable {
+    var name: String { get }
+}
+protocol Importable {
+    var packages: [Packagable] { get }
+}
+protocol Language: Importable {
     associatedtype I: Interface
     var reference: I {get set}
     var inheritances: [CodeType] {get set}

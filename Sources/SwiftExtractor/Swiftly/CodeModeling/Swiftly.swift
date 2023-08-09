@@ -30,15 +30,21 @@ enum SwiftDeclarations {
     }
 }
 
-public class Swift: Language {
+public struct SwiftPackage: Packagable {
+    var name: String
+}
+
+public struct Swift: Language {
     typealias I = InterfaceType
+    var packages: [Packagable]
     var reference: InterfaceType
     var inheritances: [CodeType]
     var conformance: [CodeType]
-    init(reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType]) {
+    init(reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType], packages: [Packagable]) {
         self.reference = reference
         self.inheritances = inheritances
         self.conformance = conformance
+        self.packages = packages
     }
 }
 

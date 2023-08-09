@@ -41,16 +41,16 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
     }
     func parse() -> Swift? {
         if let extractedValue = structureExtractor?.parse() {
-            return .init(reference: extractedValue, inheritances: [], conformance: [])
+            return .init(reference: extractedValue, inheritances: [], conformance: [], packages: [])
         }
         if let extractedValue = protocolExtractor?.parse() {
-            return .init(reference: extractedValue, inheritances: [], conformance: [])
+            return .init(reference: extractedValue, inheritances: [], conformance: [], packages: [])
         }
         if let extractedValue = classExtractor?.parse() {
-            return .init(reference: extractedValue, inheritances: [], conformance: [])
+            return .init(reference: extractedValue, inheritances: [], conformance: [], packages: [])
         }
         if let extractedValue = enumExtractor?.parse() {
-            return .init(reference: extractedValue, inheritances: [], conformance: [])
+            return .init(reference: extractedValue, inheritances: [], conformance: [], packages: [])
         }
         return nil
     }
