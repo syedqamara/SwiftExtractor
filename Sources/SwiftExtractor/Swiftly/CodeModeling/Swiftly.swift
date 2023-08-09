@@ -8,13 +8,12 @@
 import SwiftSyntax
 import Foundation
 
-fileprivate let CodeIndentString = "    "
-
-enum SwiftDeclarations {
+public enum SwiftDeclarations {
     case classes(ClassDeclSyntax)
     case structs(StructDeclSyntax)
     case protocols(ProtocolDeclSyntax)
     case enums(EnumDeclSyntax)
+    case sourceFile(SourceFileSyntax)
     
     var code: String {
         switch self {
@@ -26,21 +25,23 @@ enum SwiftDeclarations {
             return declSyntax.description
         case .enums(let declSyntax):
             return declSyntax.description
+        case .sourceFile(let declSyntax):
+            return declSyntax.description
         }
     }
 }
 
 public struct SwiftPackage: Packagable {
-    var name: String
+    public var name: String
 }
 
 public struct Swift: Language {
-    typealias I = InterfaceType
-    var packages: [Packagable]
-    var reference: InterfaceType
-    var inheritances: [CodeType]
-    var conformance: [CodeType]
-    init(reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType], packages: [Packagable]) {
+    public typealias I = InterfaceType
+    public var packages: [Packagable]
+    public var reference: InterfaceType
+    public var inheritances: [CodeType]
+    public var conformance: [CodeType]
+    public init(reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType], packages: [Packagable]) {
         self.reference = reference
         self.inheritances = inheritances
         self.conformance = conformance
@@ -49,15 +50,15 @@ public struct Swift: Language {
 }
 
 extension Swift {
-    struct Comment: Commenting {
-        var lineComment: String
-        var blockComment: String
-        var docLineComment: String
-        var docBlockComment: String
+    public struct Comment: Commenting {
+        public var lineComment: String
+        public var blockComment: String
+        public var docLineComment: String
+        public var docBlockComment: String
     }
-    struct CodeComment: CodeCommenting {
-        var leadingComments: Commenting?
-        var trailingComments: Commenting?
+    public struct CodeComment: CodeCommenting {
+        public var leadingComments: Commenting?
+        public var trailingComments: Commenting?
     }
     public enum Swiftype: String, Types {
     case `class` = "class"
@@ -65,6 +66,7 @@ extension Swift {
     case `enum` = "enum"
     case `protocol` = "protocol"
     case `propertyWrapper` = "propertyWrapper"
+    case sourceFile = "source_file"
     }
     public enum AccessModifiers: String, Access {
         case `open` = "open"
@@ -94,82 +96,82 @@ extension Swift {
         }
     }
     public struct InterfaceType: Interface {
-        typealias F = Function
-        typealias A = Property
-        typealias T = Swiftype
-        typealias ACS = AccessModifiers
+        public typealias F = Function
+        public typealias A = Property
+        public typealias T = Swiftype
+        public typealias ACS = AccessModifiers
         
-        var url: URL
-        var name: String
-        var type: T
-        var access: AccessModifiers
-        var functions: [Swift.Function]
-        var attributes: [Swift.Property]
-        var comment: CodeCommenting?
-        var declarationSyntax: SwiftDeclarations
-        var generics: [GenericType] = []
+        public var url: URL
+        public var name: String
+        public var type: T
+        public var access: AccessModifiers
+        public var functions: [Swift.Function]
+        public var attributes: [Swift.Property]
+        public var comment: CodeCommenting?
+        public var declarationSyntax: SwiftDeclarations
+        public var generics: [GenericType] = []
     }
 }
 
 extension Swift {
     public struct Generic: GenericType {
-        var url: URL
-        var name: String
-        var type: String?
-        var comment: CodeCommenting?
+        public var url: URL
+        public var name: String
+        public var type: String?
+        public var comment: CodeCommenting?
     }
     public struct PropertyType: Sourcable {
-        var url: URL
-        var name: String // The name of the DataType
-        var constraint: Constraint // The name of the DataType
-        var comment: CodeCommenting?
-        var isOptional: Bool // The isOptional of the DataType
+        public var url: URL
+        public var name: String // The name of the DataType
+        public var constraint: Constraint // The name of the DataType
+        public var comment: CodeCommenting?
+        public var isOptional: Bool // The isOptional of the DataType
         
-        mutating func name(_ name: String) {
+        public mutating func name(_ name: String) {
             self.name = name
         }
-        mutating func constraint(_ constraint: Constraint) {
+        public mutating func constraint(_ constraint: Constraint) {
             self.constraint = constraint
         }
-        mutating func isOptional(_ isOptional: Bool) {
+        public mutating func isOptional(_ isOptional: Bool) {
             self.isOptional = isOptional
         }
     }
     public struct Wrapper {
-        var name: String
-        var kind: PropertyType
-        var _kind: PropertyType
-        var _$kind: PropertyType
+        public var name: String
+        public var kind: PropertyType
+        public var _kind: PropertyType
+        public var _$kind: PropertyType
     }
     public struct Property: Attributes {
-        var url: URL
-        let name: String // The name of the variable
-        let kind: PropertyType // The kind of the variable
-        let accessModifier: AccessModifiers // The accessModifier of the variable
-        let wrapper: Wrapper?
-        let isOptional: Bool // The isOptional of the variable
-        let declatationSyntax: SyntaxProtocol
-        var comment: CodeCommenting?
+        public var url: URL
+        public let name: String // The name of the variable
+        public let kind: PropertyType // The kind of the variable
+        public let accessModifier: AccessModifiers // The accessModifier of the variable
+        public let wrapper: Wrapper?
+        public let isOptional: Bool // The isOptional of the variable
+        public let declatationSyntax: SyntaxProtocol
+        public var comment: CodeCommenting?
     }
     public struct Function: Functionality {
-        var url: URL
-        var name: String // The name of the Method
-        let `return`: PropertyType? // The kind of the Method
-        let accessModifier: AccessModifiers // The accessModifier of the Method
-        let wrapper: Wrapper?
-        let parameters: [Parameter]
-        let declatationSyntax: SyntaxProtocol
-        var generics: [GenericType] = []
-        var comment: CodeCommenting?
+        public var url: URL
+        public var name: String // The name of the Method
+        public let `return`: PropertyType? // The kind of the Method
+        public let accessModifier: AccessModifiers // The accessModifier of the Method
+        public let wrapper: Wrapper?
+        public let parameters: [Parameter]
+        public let declatationSyntax: SyntaxProtocol
+        public var generics: [GenericType] = []
+        public var comment: CodeCommenting?
     }
 }
 
 extension Swift.Function {
     public struct Parameter: Sourcable {
-        var url: URL
-        let name: String
-        let property: Swift.Property
-        var comment: CodeCommenting?
+        public var url: URL
+        public let name: String
+        public let property: Swift.Property
+        public var comment: CodeCommenting?
     }
 }
 extension Swift.PropertyType {

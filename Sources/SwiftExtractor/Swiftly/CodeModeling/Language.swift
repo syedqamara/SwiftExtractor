@@ -8,46 +8,46 @@
 import Foundation
 
 
-protocol RawValue {
+public protocol RawValue {
     associatedtype R
     var rawValue: R {get}
 }
-protocol Packagable {
+public protocol Packagable {
     var name: String { get }
 }
-protocol Importable {
+public protocol Importable {
     var packages: [Packagable] { get }
 }
-protocol Language: Importable {
+public protocol Language: Importable {
     associatedtype I: Interface
     var reference: I {get set}
     var inheritances: [CodeType] {get set}
     var conformance: [CodeType] {get set}
 }
-protocol Commenting {
+public protocol Commenting {
     var lineComment: String { get }
     var blockComment: String { get }
     var docLineComment: String { get }
     var docBlockComment: String { get }
 }
-protocol CodeCommenting {
+public protocol CodeCommenting {
     var leadingComments: Commenting? { get set }
     var trailingComments: Commenting? { get set }
 }
-protocol Sourcable {
+public protocol Sourcable {
     var url: URL { get set }
     var comment: CodeCommenting? { get set }
 }
-protocol CodeType: Sourcable {
+public protocol CodeType: Sourcable {
     var name: String {get set}
 }
-protocol GenericType: CodeType {
+public protocol GenericType: CodeType {
     var type: String? {get set}
 }
-protocol Genericable: CodeType {
+public protocol Genericable: CodeType {
     var generics: [GenericType] { get set }
 }
-protocol Interface: Genericable {
+public protocol Interface: Genericable {
     associatedtype F: Functionality
     associatedtype A: Attributes
     associatedtype T: Types
@@ -58,14 +58,14 @@ protocol Interface: Genericable {
     var access: ACS {get set}
 }
 
-protocol Implementation: Interface {
+public protocol Implementation: Interface {
     
 }
-protocol Functionality: Genericable {
+public protocol Functionality: Genericable {
     
 }
-protocol Attributes: Sourcable {
+public protocol Attributes: Sourcable {
     
 }
-protocol Access: RawValue {}
-protocol Types: RawValue {}
+public protocol Access: RawValue {}
+public protocol Types: RawValue {}
