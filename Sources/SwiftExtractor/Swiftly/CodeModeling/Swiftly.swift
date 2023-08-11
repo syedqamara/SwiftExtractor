@@ -145,7 +145,7 @@ extension Swift {
         public var _$kind: PropertyType
     }
     public enum PropertyDeclarationType: String, Types {
-    case `let`, `var`, parameter, none
+    case `let`, `var`
         
         public init(rawValue: String) {
             switch rawValue {
@@ -153,10 +153,8 @@ extension Swift {
                 self = .let
             case "var":
                 self = .var
-            case "parameter":
-                self = .parameter
             default:
-                self = .none
+                self = .let
             }
         }
         public var rawValue: String {
@@ -165,10 +163,6 @@ extension Swift {
                 return "let"
             case .var:
                 return "var"
-            case .parameter:
-                return "parameter"
-            case .none:
-                return ""
             }
         }
     }
