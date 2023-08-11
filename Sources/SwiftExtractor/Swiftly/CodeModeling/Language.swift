@@ -87,7 +87,7 @@ public protocol PropertyAttributes: Sourcable {
     var wrapper: _WrapperType_? {get}
     var isOptional: Bool {get}
 }
-public protocol Attributes: Sourcable {
+public protocol Attributes: PropertyAttributes {
     associatedtype _ModifierType_: Access
     var accessModifier: _ModifierType_ {get}
 }
