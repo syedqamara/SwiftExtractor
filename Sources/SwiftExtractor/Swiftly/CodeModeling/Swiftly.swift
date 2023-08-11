@@ -172,8 +172,7 @@ extension Swift {
             }
         }
     }
-    
-    public struct Property: Attributes {
+    public struct ParameterProperty: Attributes {
         public typealias _PropertyType_ = PropertyType
         public typealias _WrapperType_ = Wrapper
         public typealias _ModifierType_ = AccessModifiers
@@ -220,10 +219,10 @@ extension Swift {
 
 extension Swift.Function {
     public struct Parameter: FunctionParameter {
-        public typealias AttributeType = Swift.Property
+        public typealias AttributeType = Swift.ParameterProperty
         public var url: URL
         public var name: String
-        public var property: Swift.Property
+        public var property: Swift.ParameterProperty
         public var comment: CodeCommenting?
     }
 }

@@ -79,7 +79,7 @@ extension SwiftExtractor {
             return .init(
                 url: url,
                 name: parameterName,
-                property: Swift.Property(
+                property: Swift.ParameterProperty(
                     url: url,
                     name: secondName ?? parameterName,
                     kind: type,
