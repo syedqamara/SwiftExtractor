@@ -144,11 +144,54 @@ extension Swift {
         public var _kind: PropertyType
         public var _$kind: PropertyType
     }
+    public enum PropertyDeclarationType: String, Types {
+    case `let`, `var`, parameter, none
+        
+        public init(rawValue: String) {
+            switch rawValue {
+            case "let":
+                self = .let
+            case "var":
+                self = .var
+            case "parameter":
+                self = .parameter
+            default:
+                self = .none
+            }
+        }
+        public var rawValue: String {
+            switch self {
+            case .let:
+                return "let"
+            case .var:
+                return "var"
+            case .parameter:
+                return "parameter"
+            case .none:
+                return ""
+            }
+        }
+    }
+    
     public struct Property: Attributes {
         public typealias _PropertyType_ = PropertyType
         public typealias _WrapperType_ = Wrapper
         public typealias _ModifierType_ = AccessModifiers
         public var url: URL
+        public var name: String // The name of the variable
+        public var kind: _PropertyType_ // The kind of the variable
+        public var accessModifier: _ModifierType_ // The accessModifier of the variable
+        public var wrapper: _WrapperType_?
+        public var isOptional: Bool // The isOptional of the variable
+        public var declatationSyntax: SyntaxProtocol
+        public var comment: CodeCommenting?
+    }
+    public struct Variable: Attributes {
+        public typealias _PropertyType_ = PropertyType
+        public typealias _WrapperType_ = Wrapper
+        public typealias _ModifierType_ = AccessModifiers
+        public var url: URL
+        public var declarationType: PropertyDeclarationType // Whether variable is defined by let or var?
         public var name: String // The name of the variable
         public var kind: _PropertyType_ // The kind of the variable
         public var accessModifier: _ModifierType_ // The accessModifier of the variable
