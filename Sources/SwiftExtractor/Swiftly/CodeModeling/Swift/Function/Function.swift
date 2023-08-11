@@ -30,9 +30,9 @@ public struct ParameterProperty: Attributes {
     public var accessModifier: _ModifierType_ // The accessModifier of the variable
     public var wrapper: _WrapperType_?
     public var isOptional: Bool // The isOptional of the variable
-    public var declatationSyntax: SyntaxProtocol
+    public var declatationSyntax: SyntaxProtocol?
     public var comment: CodeCommenting?
-    public init(url: URL, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol, comment: CodeCommenting? = nil) {
+    public init(url: URL, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol?, comment: CodeCommenting? = nil) {
         self.url = url
         self.name = name
         self.kind = kind
@@ -56,10 +56,10 @@ public struct Function: Functionality {
     public var accessModifier: AccessModifiers // The accessModifier of the Method
     public var wrapper: Wrapper?
     public var parameters: [Parameter]
-    public var declatationSyntax: SyntaxProtocol
+    public var declatationSyntax: SyntaxProtocol?
     public var generics: [GenericType] = []
     public var comment: CodeCommenting?
-    public init(url: URL, name: String, `return`: PropertyType? = nil,accessModifier: AccessModifiers, wrapper: Wrapper? = nil, parameters: [Parameter], declatationSyntax: SyntaxProtocol, generics: [GenericType], comment: CodeCommenting? = nil) {
+    public init(url: URL, name: String, `return`: PropertyType? = nil,accessModifier: AccessModifiers, wrapper: Wrapper? = nil, parameters: [Parameter], declatationSyntax: SyntaxProtocol?, generics: [GenericType], comment: CodeCommenting? = nil) {
         self.url = url
         self.name = name
         self.accessModifier = accessModifier
