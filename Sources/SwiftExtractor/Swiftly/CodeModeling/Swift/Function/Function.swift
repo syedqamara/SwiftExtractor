@@ -13,6 +13,12 @@ public struct Parameter: FunctionParameter {
     public var name: String
     public var property: ParameterProperty
     public var comment: CodeCommenting?
+    public init(url: URL, name: String, property: ParameterProperty, comment: CodeCommenting? = nil) {
+        self.url = url
+        self.name = name
+        self.property = property
+        self.comment = comment
+    }
 }
 public struct ParameterProperty: Attributes {
     public typealias _PropertyType_ = PropertyType
@@ -26,6 +32,16 @@ public struct ParameterProperty: Attributes {
     public var isOptional: Bool // The isOptional of the variable
     public var declatationSyntax: SyntaxProtocol
     public var comment: CodeCommenting?
+    public init(url: URL, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol, comment: CodeCommenting? = nil) {
+        self.url = url
+        self.name = name
+        self.kind = kind
+        self.accessModifier = accessModifier
+        self.wrapper = wrapper
+        self.isOptional = isOptional
+        self.declatationSyntax = declatationSyntax
+        self.comment = comment
+    }
 }
 
 public struct Function: Functionality {
@@ -43,4 +59,14 @@ public struct Function: Functionality {
     public var declatationSyntax: SyntaxProtocol
     public var generics: [GenericType] = []
     public var comment: CodeCommenting?
+    public init(url: URL, name: String, `return`: PropertyType? = nil,accessModifier: AccessModifiers, wrapper: Wrapper? = nil, parameters: [Parameter], declatationSyntax: SyntaxProtocol, generics: [GenericType], comment: CodeCommenting? = nil) {
+        self.url = url
+        self.name = name
+        self.accessModifier = accessModifier
+        self.wrapper = wrapper
+        self.parameters = parameters
+        self.declatationSyntax = declatationSyntax
+        self.generics = generics
+        self.comment = comment
+    }
 }

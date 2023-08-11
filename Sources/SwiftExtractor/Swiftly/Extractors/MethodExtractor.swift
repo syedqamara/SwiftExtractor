@@ -36,7 +36,7 @@ extension SwiftExtractor {
                 return: returnType,
                 accessModifier: .internal,
                 wrapper: nil,
-                parameters: parameters, declatationSyntax: syntax,
+                parameters: parameters, declatationSyntax: syntax, generics: [],
                 comment: CommentExtractor(syntax: syntax, url: url)?.parse()
             )
         }

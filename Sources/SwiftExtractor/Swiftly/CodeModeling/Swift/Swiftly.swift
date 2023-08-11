@@ -15,7 +15,7 @@ public enum SwiftDeclarations {
     case enums(EnumDeclSyntax)
     case sourceFile(SourceFileSyntax)
     
-    var code: String {
+    public var code: String {
         switch self {
         case .classes(let declSyntax):
             return declSyntax.description
@@ -29,10 +29,28 @@ public enum SwiftDeclarations {
             return declSyntax.description
         }
     }
+    public init(_ declaration: ClassDeclSyntax) {
+        self = .classes(declaration)
+    }
+    public init(_ declaration: StructDeclSyntax) {
+        self = .structs(declaration)
+    }
+    public init(_ declaration: ProtocolDeclSyntax) {
+        self = .protocols(declaration)
+    }
+    public init(_ declaration: EnumDeclSyntax) {
+        self = .enums(declaration)
+    }
+    public init(_ declaration: SourceFileSyntax) {
+        self = .sourceFile(declaration)
+    }
 }
 
 public struct SwiftPackage: Packagable {
     public var name: String
+    public init(name: String) {
+        self.name = name
+    }
 }
 
 public struct Swift: Language {
@@ -53,10 +71,20 @@ public struct Comment: Commenting {
     public var blockComment: String
     public var docLineComment: String
     public var docBlockComment: String
+    public init(lineComment: String, blockComment: String, docLineComment: String, docBlockComment: String) {
+        self.lineComment = lineComment
+        self.blockComment = blockComment
+        self.docLineComment = docLineComment
+        self.docBlockComment = docBlockComment
+    }
 }
 public struct CodeComment: CodeCommenting {
     public var leadingComments: Commenting?
     public var trailingComments: Commenting?
+    public init(leadingComments: Commenting? = nil, trailingComments: Commenting? = nil) {
+        self.leadingComments = leadingComments
+        self.trailingComments = trailingComments
+    }
 }
 public enum Swiftype: String, Types {
 case `class` = "class"
@@ -65,6 +93,24 @@ case `enum` = "enum"
 case `protocol` = "protocol"
 case `propertyWrapper` = "propertyWrapper"
 case sourceFile = "source_file"
+    public init(rawValue: String) {
+        switch rawValue {
+        case "class":
+            self = .class
+        case "struct":
+            self = .struct
+        case "enum":
+            self = .enum
+        case "protocol":
+            self = .protocol
+        case "propertyWrapper":
+            self = .propertyWrapper
+        case "sourceFile":
+            self = .sourceFile
+        default:
+            self = .sourceFile
+        }
+    }
 }
 public enum AccessModifiers: String, Access {
     case `open` = "open"

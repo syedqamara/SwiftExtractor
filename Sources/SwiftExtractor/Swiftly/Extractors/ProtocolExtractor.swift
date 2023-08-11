@@ -34,7 +34,8 @@ extension SwiftExtractor {
                 functions: functionsExtractor.parse() ?? [],
                 attributes: propertiesExtractor.parse() ?? [],
                 comment: CommentExtractor(syntax: syntax, url: url)?.parse(),
-                declarationSyntax: .protocols(syntax)
+                declarationSyntax: .protocols(syntax),
+                generics: []
             )
         }
     }
