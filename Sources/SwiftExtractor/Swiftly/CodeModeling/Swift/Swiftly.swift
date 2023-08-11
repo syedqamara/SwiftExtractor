@@ -117,7 +117,7 @@ public enum AccessModifiers: String, Access {
     case `public` = "public"
     case `internal` = "internal"
     case `private` = "private"
-    case `filePrivate` = "filePrivate"
+    case `filePrivate` = "fileprivate"
     case `none` = "none"
     
     public init(rawValue: String) {
@@ -130,7 +130,7 @@ public enum AccessModifiers: String, Access {
             self = .internal
         case "private":
             self = .private
-        case "filePrivate":
+        case "fileprivate":
             self = .filePrivate
         case "":
             self = .internal
