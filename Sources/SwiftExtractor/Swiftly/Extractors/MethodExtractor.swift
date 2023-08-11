@@ -63,7 +63,7 @@ extension SwiftExtractor {
         
         var url: URL
         var syntax: FunctionParameterListSyntax.Element
-        private var parameterTypeExtractor: SwiftExtractor.PropertyExtractor.ParameterTypeExtractor?
+        private var parameterTypeExtractor: SwiftExtractor.VariableExtractor.ParameterTypeExtractor?
         required init?(syntax: SwiftSyntax.FunctionParameterListSyntax.Element, url: URL) {
             self.url = url
             guard let type = syntax.type else {return nil}

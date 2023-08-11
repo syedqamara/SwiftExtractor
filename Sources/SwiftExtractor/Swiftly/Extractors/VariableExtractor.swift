@@ -12,9 +12,9 @@ import core_architecture
 
 
 extension SwiftExtractor {
-    class PropertyExtractor: SourceCodeParsable {
+    class VariableExtractor: SourceCodeParsable {
         typealias Input = VariableDeclSyntax
-        typealias Output = Swift.Property
+        typealias Output = Swift.Variable
         var url: URL
         var syntax: VariableDeclSyntax
         var nameExtractor: PropertyNameExtractor
@@ -28,12 +28,13 @@ extension SwiftExtractor {
             self.typeExtractor = .init(syntax: syntax, url: url)
             self.accessExtractor = .init(syntax: syntax, url: url)
         }
-        func parse() -> Swift.Property? {
+        func parse() -> Swift.Variable? {
             guard let name = getName(),
                   let type = getType(),
                   let accessModifier = getAccessModifier() else { return nil }
-            return Swift.Property(
+            return Swift.Variable(
                 url: url,
+                declarationType: letOrVar(),
                 name: name,
                 kind: type,
                 accessModifier: accessModifier,
@@ -46,6 +47,9 @@ extension SwiftExtractor {
         private func getName() -> String? {
             nameExtractor.parse()
         }
+        private func letOrVar() -> Swift.PropertyDeclarationType {
+            return .init(rawValue: syntax.letOrVarKeyword.description)
+        }
         private func getType() -> Swift.PropertyType? {
             typeExtractor.parse()
         }
@@ -56,12 +60,12 @@ extension SwiftExtractor {
             syntax.isOptional
         }
     }
-    class PropertiesExtractor: SourceCodeParsable {
+    class VariablesExtractor: SourceCodeParsable {
         typealias Input = MemberDeclListSyntax
-        typealias Output = [Swift.Property]
+        typealias Output = [Swift.Variable]
         var url: URL
         var syntax: MemberDeclListSyntax
-        var propertyExtractors: [PropertyExtractor]
+        var propertyExtractors: [VariableExtractor]
         required init(syntax: MemberDeclListSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
@@ -72,12 +76,12 @@ extension SwiftExtractor {
                 return nil
             }.compactMap { $0 }
         }
-        func parse() -> [Swift.Property]? {
+        func parse() -> [Swift.Variable]? {
             return propertyExtractors.map { $0.parse() }.compactMap { $0 }
         }
     }
 }
-extension SwiftExtractor.PropertyExtractor {
+extension SwiftExtractor.VariableExtractor {
     class PropertyNameExtractor: SourceCodeParsable {
         typealias Input = IdentifierPatternSyntax
         typealias Output = String

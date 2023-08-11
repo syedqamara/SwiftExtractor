@@ -15,7 +15,7 @@ extension SwiftExtractor {
         typealias Output = Swift.InterfaceType
         var url: URL
         var syntax: StructDeclSyntax
-        var propertiesExtractor: PropertiesExtractor
+        var propertiesExtractor: VariablesExtractor
         var functionsExtractor: FunctionsExtractor
         
         required init(syntax: StructDeclSyntax, url: URL) {

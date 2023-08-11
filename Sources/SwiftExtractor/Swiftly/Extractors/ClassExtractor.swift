@@ -14,7 +14,7 @@ extension SwiftExtractor {
         typealias Output = Swift.InterfaceType
         var url: URL
         var syntax: ClassDeclSyntax
-        var propertiesExtractor: PropertiesExtractor
+        var propertiesExtractor: VariablesExtractor
         var genericParameterExtractor: GenericParamterExtractor? = nil
         var functionsExtractor: FunctionsExtractor
         required init?(syntax: ClassDeclSyntax, url: URL) {

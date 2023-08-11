@@ -15,7 +15,7 @@ extension SwiftExtractor {
         typealias Output = Swift.InterfaceType
         var url: URL
         var syntax: EnumDeclSyntax
-        var propertiesExtractor: PropertiesExtractor
+        var propertiesExtractor: VariablesExtractor
         var genericParameterExtractor: GenericParamterExtractor? = nil
         var functionsExtractor: FunctionsExtractor
         

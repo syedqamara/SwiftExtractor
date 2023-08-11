@@ -97,7 +97,7 @@ extension Swift {
     }
     public struct InterfaceType: Interface {
         public typealias F = Function
-        public typealias A = Property
+        public typealias A = Variable
         public typealias T = Swiftype
         public typealias ACS = AccessModifiers
         
@@ -106,7 +106,7 @@ extension Swift {
         public var type: T
         public var access: AccessModifiers
         public var functions: [Swift.Function]
-        public var attributes: [Swift.Property]
+        public var attributes: [Swift.Variable]
         public var comment: CodeCommenting?
         public var declarationSyntax: SwiftDeclarations
         public var generics: [GenericType] = []
