@@ -83,9 +83,7 @@ extension SwiftExtractor {
                     url: url,
                     name: secondName ?? parameterName,
                     kind: type,
-                    accessModifier: .none,
                     wrapper: nil,
-                    isOptional: type.isOptional,
                     declatationSyntax: syntax,
                     comment: CommentExtractor(syntax: syntax, url: url)?.parse()
                 )

@@ -76,18 +76,20 @@ public protocol Functionality: Genericable {
     var parameters: [_FunctionParameter_] {get}
 }
 public protocol FunctionParameter: Sourcable {
-    associatedtype AttributeType: Attributes
+    associatedtype AttributeType: PropertyAttributes
     var property: AttributeType { get }
 }
 
-public protocol Attributes: Sourcable {
+public protocol PropertyAttributes: Sourcable {
     associatedtype _PropertyType_: Sourcable
-    associatedtype _ModifierType_: Access
     associatedtype _WrapperType_: Wrappable
     var kind: _PropertyType_ {get}
-    var accessModifier: _ModifierType_ {get}
     var wrapper: _WrapperType_? {get}
     var isOptional: Bool {get}
+}
+public protocol Attributes: Sourcable {
+    associatedtype _ModifierType_: Access
+    var accessModifier: _ModifierType_ {get}
 }
 public protocol Access: RawValue {}
 public protocol Types: RawValue {}

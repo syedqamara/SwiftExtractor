@@ -20,25 +20,28 @@ public struct Parameter: FunctionParameter {
         self.comment = comment
     }
 }
-public struct ParameterProperty: Attributes {
+public struct ParameterProperty: PropertyAttributes {
     public typealias _PropertyType_ = PropertyType
     public typealias _WrapperType_ = Wrapper
-    public typealias _ModifierType_ = AccessModifiers
     public var url: URL
     public var name: String // The name of the variable
     public var kind: _PropertyType_ // The kind of the variable
-    public var accessModifier: _ModifierType_ // The accessModifier of the variable
     public var wrapper: _WrapperType_?
-    public var isOptional: Bool // The isOptional of the variable
+    public var isOptional: Bool {
+        get {
+            kind.isOptional
+        }
+        set {
+            kind.isOptional = newValue
+        }
+    }
     public var declatationSyntax: SyntaxProtocol?
     public var comment: CodeCommenting?
-    public init(url: URL, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol?, comment: CodeCommenting? = nil) {
+    public init(url: URL, name: String, kind: _PropertyType_, wrapper: _WrapperType_? = nil, declatationSyntax: SyntaxProtocol?, comment: CodeCommenting? = nil) {
         self.url = url
         self.name = name
         self.kind = kind
-        self.accessModifier = accessModifier
         self.wrapper = wrapper
-        self.isOptional = isOptional
         self.declatationSyntax = declatationSyntax
         self.comment = comment
     }

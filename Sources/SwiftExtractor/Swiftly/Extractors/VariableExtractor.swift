@@ -34,12 +34,11 @@ extension SwiftExtractor {
                   let accessModifier = getAccessModifier() else { return nil }
             return Variable(
                 url: url,
+                accessModifier: accessModifier,
                 declarationType: letOrVar(),
                 name: name,
                 kind: type,
-                accessModifier: accessModifier,
                 wrapper: nil,
-                isOptional: getIsOptional(),
                 declatationSyntax: syntax,
                 comment: CommentExtractor(syntax: syntax, url: url)?.parse()
             )

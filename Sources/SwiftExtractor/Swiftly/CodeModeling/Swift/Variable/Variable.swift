@@ -77,10 +77,17 @@ public struct Variable: Attributes {
     public var kind: _PropertyType_ // The kind of the variable
     public var accessModifier: _ModifierType_ // The accessModifier of the variable
     public var wrapper: _WrapperType_?
-    public var isOptional: Bool // The isOptional of the variable
+    public var isOptional: Bool {
+        get {
+            kind.isOptional
+        }
+        set {
+            kind.isOptional = newValue
+        }
+    }
     public var declatationSyntax: SyntaxProtocol?
     public var comment: CodeCommenting?
-    public init(url: URL, declarationType: PropertyDeclarationType, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol?, comment: CodeCommenting? = nil) {
+    public init(url: URL, accessModifier: _ModifierType_, declarationType: PropertyDeclarationType, name: String, kind: _PropertyType_, wrapper: _WrapperType_? = nil, declatationSyntax: SyntaxProtocol?, comment: CodeCommenting? = nil) {
         self.url = url
         self.declarationType = declarationType
         self.name = name
