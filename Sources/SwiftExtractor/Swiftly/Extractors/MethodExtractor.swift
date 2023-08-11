@@ -12,7 +12,7 @@ import core_architecture
 extension SwiftExtractor {
     class FunctionExtractor: SourceCodeParsable {
         typealias Input = FunctionDeclSyntax
-        typealias Output = Swift.Function
+        typealias Output = Function
         var url: URL
         var syntax: FunctionDeclSyntax
         private var parameterExtractor: FunctionParametersExtractor
@@ -26,7 +26,7 @@ extension SwiftExtractor {
                 self.returnTypeExtractor = .init(syntax: type, url: url)
             }
         }
-        func parse() -> Swift.Function? {
+        func parse() -> Function? {
             let name = syntax.identifier.text
             guard let parameters = parameterExtractor.parse() else {return nil}
             let returnType = returnTypeExtractor?.parse()
@@ -43,7 +43,7 @@ extension SwiftExtractor {
     }
     class FunctionParametersExtractor: SourceCodeParsable {
         typealias Input = FunctionSignatureSyntax
-        typealias Output = [Swift.Function.Parameter]
+        typealias Output = [Parameter]
         var url: URL
         var syntax: FunctionSignatureSyntax
         private var parameterExtractors: [FunctionParameterExtractor]
@@ -53,13 +53,13 @@ extension SwiftExtractor {
             let paramSyntax = syntax.input.parameterList
             self.parameterExtractors = paramSyntax.compactMap { .init(syntax: $0, url: url) }
         }
-        func parse() -> [Swift.Function.Parameter]? {
+        func parse() -> [Parameter]? {
             return parameterExtractors.map { $0.parse() }.compactMap { $0 }
         }
     }
     class FunctionParameterExtractor: SourceCodeParsable {
         typealias Input = FunctionParameterListSyntax.Element
-        typealias Output = Swift.Function.Parameter
+        typealias Output = Parameter
         
         var url: URL
         var syntax: FunctionParameterListSyntax.Element
@@ -70,7 +70,7 @@ extension SwiftExtractor {
             self.syntax = syntax
             self.parameterTypeExtractor = .init(syntax: type, url: url)
         }
-        func parse() -> Swift.Function.Parameter? {
+        func parse() -> Parameter? {
             guard let type = parameterTypeExtractor?.parse() else {return nil}
             guard let firstName = syntax.firstName else { return nil }
             let secondName = syntax.secondName?.text
@@ -79,7 +79,7 @@ extension SwiftExtractor {
             return .init(
                 url: url,
                 name: parameterName,
-                property: Swift.ParameterProperty(
+                property: ParameterProperty(
                     url: url,
                     name: secondName ?? parameterName,
                     kind: type,
@@ -94,15 +94,15 @@ extension SwiftExtractor {
     }
     class FunctionReturnTypeExtractor: SourceCodeParsable {
         typealias Input = TypeSyntax
-        typealias Output = Swift.PropertyType
+        typealias Output = PropertyType
         var url: URL
         var syntax: TypeSyntax
         required init(syntax: TypeSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
         }
-        func parse() -> Swift.PropertyType? {
-            var propertyType = Swift.PropertyType(
+        func parse() -> PropertyType? {
+            var propertyType = PropertyType(
                 url: url,
                 name: "",
                 constraint: .none,
@@ -113,7 +113,7 @@ extension SwiftExtractor {
                 if let type = sugarType.baseType.as(SimpleTypeIdentifierSyntax.self) {
                     propertyType.name(type.name.text)
                 }
-                if let constraint = Swift.PropertyType.Constraint(rawValue: sugarType.someOrAnySpecifier.text) {
+                if let constraint = Constraint(rawValue: sugarType.someOrAnySpecifier.text) {
                     propertyType.constraint(constraint)
                 }
             }
@@ -125,7 +125,7 @@ extension SwiftExtractor {
     }
     class FunctionsExtractor: SourceCodeParsable {
         typealias Input = MemberDeclListSyntax
-        typealias Output = [Swift.Function]
+        typealias Output = [Function]
         var url: URL
         var syntax: MemberDeclListSyntax
         var propertyExtractors: [FunctionExtractor]
@@ -139,7 +139,7 @@ extension SwiftExtractor {
                 return nil
             }.compactMap { $0 }
         }
-        func parse() -> [Swift.Function]? {
+        func parse() -> [Function]? {
             return propertyExtractors.map { $0.parse() }.compactMap { $0 }
         }
     }

@@ -12,7 +12,7 @@ import core_architecture
 extension SwiftExtractor {
     class StructureExtractor: SourceCodeParsable {
         typealias Input = StructDeclSyntax
-        typealias Output = Swift.InterfaceType
+        typealias Output = InterfaceType
         var url: URL
         var syntax: StructDeclSyntax
         var propertiesExtractor: VariablesExtractor

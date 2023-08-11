@@ -12,7 +12,7 @@ import core_architecture
 extension SwiftExtractor {
     class ProtocolExtractor: SourceCodeParsable {
         typealias Input = ProtocolDeclSyntax
-        typealias Output = Swift.InterfaceType
+        typealias Output = InterfaceType
         var url: URL
         var syntax: ProtocolDeclSyntax
         var propertiesExtractor: VariablesExtractor

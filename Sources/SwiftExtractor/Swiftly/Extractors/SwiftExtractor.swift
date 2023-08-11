@@ -57,14 +57,14 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
 }
 class LeadingCommentExtractor: SourceCodeParsable {
     typealias Input = SyntaxProtocol
-    typealias Output = Swift.Comment
+    typealias Output = Comment
     var url: URL
     var syntax: Input
     required init?(syntax: Input, url: URL) {
         self.url = url
         self.syntax = syntax
     }
-    func parse() -> Swift.Comment? {
+    func parse() -> Comment? {
         guard let trivia = syntax.leadingTrivia else { return nil }
         return .init(
             lineComment: trivia.lineCommentText,
@@ -76,14 +76,14 @@ class LeadingCommentExtractor: SourceCodeParsable {
 }
 class TrailingCommentExtractor: SourceCodeParsable {
     typealias Input = SyntaxProtocol
-    typealias Output = Swift.Comment
+    typealias Output = Comment
     var url: URL
     var syntax: Input
     required init?(syntax: Input, url: URL) {
         self.url = url
         self.syntax = syntax
     }
-    func parse() -> Swift.Comment? {
+    func parse() -> Comment? {
         guard let trivia = syntax.leadingTrivia else { return nil }
         return .init(
             lineComment: trivia.lineCommentText,
@@ -95,7 +95,7 @@ class TrailingCommentExtractor: SourceCodeParsable {
 }
 class CommentExtractor: SourceCodeParsable {
     typealias Input = SyntaxProtocol
-    typealias Output = Swift.CodeComment
+    typealias Output = CodeComment
     
     var url: URL
     var syntax: Input

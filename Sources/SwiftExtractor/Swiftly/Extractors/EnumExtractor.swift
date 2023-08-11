@@ -12,7 +12,7 @@ import core_architecture
 extension SwiftExtractor {
     class EnumExtractor: SourceCodeParsable {
         typealias Input = EnumDeclSyntax
-        typealias Output = Swift.InterfaceType
+        typealias Output = InterfaceType
         var url: URL
         var syntax: EnumDeclSyntax
         var propertiesExtractor: VariablesExtractor
@@ -30,7 +30,7 @@ extension SwiftExtractor {
             }
         }
         
-        private var generics: [Swift.Generic] {
+        private var generics: [Generic] {
             guard let genericParameter = genericParameterExtractor?.parse() else { return [] }
             return genericParameter
         }

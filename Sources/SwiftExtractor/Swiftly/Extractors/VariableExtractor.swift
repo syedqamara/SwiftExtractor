@@ -14,7 +14,7 @@ import core_architecture
 extension SwiftExtractor {
     class VariableExtractor: SourceCodeParsable {
         typealias Input = VariableDeclSyntax
-        typealias Output = Swift.Variable
+        typealias Output = Variable
         var url: URL
         var syntax: VariableDeclSyntax
         var nameExtractor: PropertyNameExtractor
@@ -28,11 +28,11 @@ extension SwiftExtractor {
             self.typeExtractor = .init(syntax: syntax, url: url)
             self.accessExtractor = .init(syntax: syntax, url: url)
         }
-        func parse() -> Swift.Variable? {
+        func parse() -> Variable? {
             guard let name = getName(),
                   let type = getType(),
                   let accessModifier = getAccessModifier() else { return nil }
-            return Swift.Variable(
+            return Variable(
                 url: url,
                 declarationType: letOrVar(),
                 name: name,
@@ -47,13 +47,13 @@ extension SwiftExtractor {
         private func getName() -> String? {
             nameExtractor.parse()
         }
-        private func letOrVar() -> Swift.PropertyDeclarationType {
+        private func letOrVar() -> PropertyDeclarationType {
             return .init(rawValue: syntax.letOrVarKeyword.description)
         }
-        private func getType() -> Swift.PropertyType? {
+        private func getType() -> PropertyType? {
             typeExtractor.parse()
         }
-        private func getAccessModifier() -> Swift.AccessModifiers? {
+        private func getAccessModifier() -> AccessModifiers? {
             accessExtractor.parse()
         }
         private func getIsOptional() -> Bool {
@@ -62,7 +62,7 @@ extension SwiftExtractor {
     }
     class VariablesExtractor: SourceCodeParsable {
         typealias Input = MemberDeclListSyntax
-        typealias Output = [Swift.Variable]
+        typealias Output = [Variable]
         var url: URL
         var syntax: MemberDeclListSyntax
         var propertyExtractors: [VariableExtractor]
@@ -76,7 +76,7 @@ extension SwiftExtractor {
                 return nil
             }.compactMap { $0 }
         }
-        func parse() -> [Swift.Variable]? {
+        func parse() -> [Variable]? {
             return propertyExtractors.map { $0.parse() }.compactMap { $0 }
         }
     }
@@ -98,16 +98,16 @@ extension SwiftExtractor.VariableExtractor {
     
     class PropertyTypeExtractor: SourceCodeParsable {
         typealias Input = VariableDeclSyntax
-        typealias Output = Swift.PropertyType
+        typealias Output = PropertyType
         var url: URL
         var syntax: VariableDeclSyntax
         required init(syntax: VariableDeclSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
         }
-        func parse() -> Swift.PropertyType? {
+        func parse() -> PropertyType? {
             
-            var propertyType = Swift.PropertyType(
+            var propertyType = PropertyType(
                 url: url,
                 name: "",
                 constraint: .none,
@@ -161,23 +161,23 @@ extension SwiftExtractor.VariableExtractor {
             }
             return syntax.description
         }
-        private func parsePropertyConstraints(syntax: TypeSyntax) -> Swift.PropertyType.Constraint {
+        private func parsePropertyConstraints(syntax: TypeSyntax) -> Constraint {
             guard let sugarType = syntax.as(ConstrainedSugarTypeSyntax.self) else { return .none }
-            guard let constraint = Swift.PropertyType.Constraint(rawValue: sugarType.someOrAnySpecifier.text) else { return .none }
+            guard let constraint = Constraint(rawValue: sugarType.someOrAnySpecifier.text) else { return .none }
             return constraint
         }
     }
     class ParameterTypeExtractor: SourceCodeParsable {
         typealias Input = TypeSyntax
-        typealias Output = Swift.PropertyType
+        typealias Output = PropertyType
         var url: URL
         var syntax: TypeSyntax
         required init(syntax: TypeSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
         }
-        func parse() -> Swift.PropertyType? {
-            var propertyType = Swift.PropertyType(
+        func parse() -> PropertyType? {
+            var propertyType = PropertyType(
                 url: url,
                 name: "",
                 constraint: .none,
@@ -188,7 +188,7 @@ extension SwiftExtractor.VariableExtractor {
                 if let type = sugarType.baseType.as(SimpleTypeIdentifierSyntax.self) {
                     propertyType.name(type.name.text)
                 }
-                if let constraint = Swift.PropertyType.Constraint(rawValue: sugarType.someOrAnySpecifier.text) {
+                if let constraint = Constraint(rawValue: sugarType.someOrAnySpecifier.text) {
                     propertyType.constraint(constraint)
                 }
             }
@@ -203,11 +203,11 @@ extension SwiftExtractor.VariableExtractor {
     }
     
     class PropertyAccessModifierExtractor: SourceCodeParsable {
-        typealias Output = Swift.AccessModifiers
+        typealias Output = AccessModifiers
         typealias Input = VariableDeclSyntax
         var url: URL
         var syntax: VariableDeclSyntax
-        func parse() -> Swift.AccessModifiers? {
+        func parse() -> AccessModifiers? {
             let access = syntax.modifiers?.first(where: { $0.name.tokenKind.isAccessModifier })?.name.text ?? "internal"
             return .init(rawValue: access)
         }

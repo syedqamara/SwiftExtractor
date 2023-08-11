@@ -11,7 +11,7 @@ import core_architecture
 extension SwiftExtractor {
     class ClassExtractor: SourceCodeParsable {
         typealias Input = ClassDeclSyntax
-        typealias Output = Swift.InterfaceType
+        typealias Output = InterfaceType
         var url: URL
         var syntax: ClassDeclSyntax
         var propertiesExtractor: VariablesExtractor
@@ -27,7 +27,7 @@ extension SwiftExtractor {
             propertiesExtractor = .init(syntax: members, url: url)
             functionsExtractor = .init(syntax: members, url: url)
         }
-        private var generics: [Swift.Generic] {
+        private var generics: [Generic] {
             guard let genericParameter = genericParameterExtractor?.parse() else { return [] }
             return genericParameter
         }
