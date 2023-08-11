@@ -14,7 +14,13 @@ public struct PropertyType: Sourcable {
     public var constraint: Constraint // The name of the DataType
     public var comment: CodeCommenting?
     public var isOptional: Bool // The isOptional of the DataType
-    
+    public init(url: URL, name: String, constraint: Constraint, comment: CodeCommenting? = nil, isOptional: Bool) {
+        self.url = url
+        self.name = name
+        self.constraint = constraint
+        self.comment = comment
+        self.isOptional = isOptional
+    }
     public mutating func name(_ name: String) {
         self.name = name
     }
@@ -31,6 +37,13 @@ public struct Wrapper: Wrappable {
     public var kind: PropertyType
     public var _kind: PropertyType
     public var _$kind: PropertyType
+    public init(url: URL, name: String, kind: PropertyType, _kind: PropertyType, _$kind: PropertyType) {
+        self.url = url
+        self.name = name
+        self.kind = kind
+        self._kind = _kind
+        self._$kind = _$kind
+    }
 }
 public enum PropertyDeclarationType: String, Types {
 case `let`, `var`
@@ -67,6 +80,17 @@ public struct Variable: Attributes {
     public var isOptional: Bool // The isOptional of the variable
     public var declatationSyntax: SyntaxProtocol
     public var comment: CodeCommenting?
+    public init(url: URL, declarationType: PropertyDeclarationType, name: String, kind: _PropertyType_, accessModifier: _ModifierType_, wrapper: _WrapperType_? = nil, isOptional: Bool, declatationSyntax: SyntaxProtocol, comment: CodeCommenting? = nil) {
+        self.url = url
+        self.declarationType = declarationType
+        self.name = name
+        self.kind = kind
+        self.accessModifier = accessModifier
+        self.wrapper = wrapper
+        self.isOptional = isOptional
+        self.declatationSyntax = declatationSyntax
+        self.comment = comment
+    }
 }
 public enum Constraint: String {
 case some, any, none
