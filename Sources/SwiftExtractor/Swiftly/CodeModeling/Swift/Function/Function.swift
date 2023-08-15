@@ -65,6 +65,7 @@ public struct Function: Functionality {
     public init(url: URL, name: String, `return`: PropertyType? = nil,accessModifier: AccessModifiers, wrapper: Wrapper? = nil, parameters: [Parameter], declatationSyntax: SyntaxProtocol?, generics: [GenericType], comment: CodeCommenting? = nil) {
         self.url = url
         self.name = name
+        self.return = `return`
         self.accessModifier = accessModifier
         self.wrapper = wrapper
         self.parameters = parameters
