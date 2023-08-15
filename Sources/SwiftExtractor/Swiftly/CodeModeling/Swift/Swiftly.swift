@@ -14,7 +14,7 @@ public enum SwiftDeclarations {
     case protocols(ProtocolDeclSyntax)
     case enums(EnumDeclSyntax)
     case sourceFile(SourceFileSyntax)
-    
+    case none
     public var code: String {
         switch self {
         case .classes(let declSyntax):
@@ -27,6 +27,8 @@ public enum SwiftDeclarations {
             return declSyntax.description
         case .sourceFile(let declSyntax):
             return declSyntax.description
+        case .none:
+            return ""
         }
     }
     public init(_ declaration: ClassDeclSyntax) {
