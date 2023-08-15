@@ -18,7 +18,7 @@ public protocol Packagable {
 public protocol Importable {
     var packages: [Packagable] { get }
 }
-public protocol Language: Importable {
+public protocol Language: Sourcable, Importable {
     associatedtype I: Interface
     var reference: I {get set}
     var inheritances: [CodeType] {get set}

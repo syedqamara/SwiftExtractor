@@ -57,15 +57,21 @@ public struct SwiftPackage: Packagable {
 
 public struct Swift: Language {
     public typealias I = InterfaceType
+    public var url: URL
+    public var name: String
+    public var comment: CodeCommenting?
     public var packages: [Packagable]
     public var reference: InterfaceType
     public var inheritances: [CodeType]
     public var conformance: [CodeType]
-    public init(reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType], packages: [Packagable]) {
+    init(url: URL, name: String, comment: CodeCommenting? = nil, packages: [Packagable], reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType]) {
+        self.url = url
+        self.name = name
+        self.comment = comment
+        self.packages = packages
         self.reference = reference
         self.inheritances = inheritances
         self.conformance = conformance
-        self.packages = packages
     }
 }
 public struct Comment: Commenting {
