@@ -64,7 +64,7 @@ public struct Swift: Language {
     public var reference: InterfaceType
     public var inheritances: [CodeType]
     public var conformance: [CodeType]
-    init(url: URL, name: String, comment: CodeCommenting? = nil, packages: [Packagable], reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType]) {
+    public init(url: URL, name: String, comment: CodeCommenting? = nil, packages: [Packagable], reference: InterfaceType, inheritances: [CodeType], conformance: [CodeType]) {
         self.url = url
         self.name = name
         self.comment = comment
