@@ -18,7 +18,12 @@ extension SwiftExtractor {
         var propertiesExtractor: VariablesExtractor
         var genericParameterExtractor: GenericParamterExtractor? = nil
         var functionsExtractor: FunctionsExtractor
-        
+        var swiftTypeStorage: SwiftTypeStorageProtocol! {
+            didSet {
+                protocolConformanceExtractor.swiftTypeStorage = swiftTypeStorage
+            }
+        }
+        var protocolConformanceExtractor: ProtocolConformanceNameExtractor<EnumDeclSyntax>
         required init?(syntax: EnumDeclSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
@@ -28,6 +33,7 @@ extension SwiftExtractor {
             if let generics = syntax.genericParameters {
                 genericParameterExtractor = .init(syntax: generics, url: url)
             }
+            protocolConformanceExtractor = .init(syntax: syntax, url: url)!
         }
         
         private var generics: [Generic] {
@@ -46,6 +52,9 @@ extension SwiftExtractor {
                 declarationSyntax: .enums(syntax),
                 generics: generics
             )
+        }
+        func conformances() -> [SwiftProtocolConformance] {
+            protocolConformanceExtractor.parse() ?? []
         }
     }
 }

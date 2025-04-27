@@ -17,13 +17,19 @@ extension SwiftExtractor {
         var syntax: StructDeclSyntax
         var propertiesExtractor: VariablesExtractor
         var functionsExtractor: FunctionsExtractor
-        
+        var swiftTypeStorage: SwiftTypeStorageProtocol! {
+            didSet {
+                protocolConformanceExtractor.swiftTypeStorage = swiftTypeStorage
+            }
+        }
+        var protocolConformanceExtractor: ProtocolConformanceNameExtractor<StructDeclSyntax>
         required init(syntax: StructDeclSyntax, url: URL) {
             self.url = url
             self.syntax = syntax
             let members = syntax.members.members
             propertiesExtractor = .init(syntax: members, url: url)
             functionsExtractor = .init(syntax: members, url: url)
+            protocolConformanceExtractor = .init(syntax: syntax, url: url)!
         }
         func parse() -> Output? {
             return .init(
@@ -37,6 +43,9 @@ extension SwiftExtractor {
                 declarationSyntax: .structs(syntax),
                 generics: []
             )
+        }
+        func conformances() -> [SwiftProtocolConformance] {
+            protocolConformanceExtractor.parse() ?? []
         }
     }
 }

@@ -55,6 +55,28 @@ public struct SwiftPackage: Packagable {
     }
 }
 
+public struct SwiftClassInheritance: CodeType {
+    public var url: URL
+    public var comment: (any CodeCommenting)?
+    public var name: String
+    public init(url: URL, comment: (any CodeCommenting)? = nil, name: String) {
+        self.url = url
+        self.comment = comment
+        self.name = name
+    }
+}
+
+public struct SwiftProtocolConformance: CodeType {
+    public var url: URL
+    public var comment: (any CodeCommenting)?
+    public var name: String
+    public init(url: URL, comment: (any CodeCommenting)? = nil, name: String) {
+        self.url = url
+        self.comment = comment
+        self.name = name
+    }
+}
+
 public struct Swift: Language {
     public typealias I = InterfaceType
     public var url: URL

@@ -14,11 +14,21 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
     typealias Output = Swift
     var url: URL
     var syntax: S
-    
     var structureExtractor: StructureExtractor? = nil
     var protocolExtractor: ProtocolExtractor? = nil
     var classExtractor: ClassExtractor? = nil
     var enumExtractor: EnumExtractor? = nil
+    
+    var sourceFileSyntax: SourceFileSyntax!
+    
+    var swiftTypeStorage: SwiftTypeStorageProtocol! {
+        didSet {
+            structureExtractor?.swiftTypeStorage = swiftTypeStorage
+            protocolExtractor?.swiftTypeStorage = swiftTypeStorage
+            classExtractor?.swiftTypeStorage = swiftTypeStorage
+            enumExtractor?.swiftTypeStorage = swiftTypeStorage
+        }
+    }
     
     required init?(syntax: S, url: URL) {
         self.url = url
@@ -40,6 +50,12 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
         }
     }
     func parse() -> Swift? {
+        guard let swift = parseSwift() else { return nil }
+        let swiftTypeAddress = SwiftTypeAddress(swift: swift, url: url, sourceFileSyntax: sourceFileSyntax)
+        swiftTypeStorage.add(swiftTypeAddress)
+        return swift
+    }
+    private func parseSwift() -> Swift? {
         if let extractedValue = structureExtractor?.parse() {
             return .init(
                 url: url,
@@ -47,7 +63,7 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
                 packages: [],
                 reference: extractedValue,
                 inheritances: [],
-                conformance: []
+                conformance: structureExtractor?.conformances() ?? []
             )
         }
         if let extractedValue = protocolExtractor?.parse() {
@@ -57,7 +73,7 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
                 packages: [],
                 reference: extractedValue,
                 inheritances: [],
-                conformance: []
+                conformance: protocolExtractor?.conformances() ?? []
             )
         }
         if let extractedValue = classExtractor?.parse() {
@@ -66,8 +82,8 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
                 name: url.lastPathComponent,
                 packages: [],
                 reference: extractedValue,
-                inheritances: [],
-                conformance: []
+                inheritances: classExtractor?.parentClasses() ?? [],
+                conformance: classExtractor?.conformances() ?? []
             )
         }
         if let extractedValue = enumExtractor?.parse() {
@@ -77,7 +93,7 @@ class SwiftExtractor<S: SyntaxProtocol>: SourceCodeParsable {
                 packages: [],
                 reference: extractedValue,
                 inheritances: [],
-                conformance: []
+                conformance: enumExtractor?.conformances() ?? []
             )
         }
         return nil

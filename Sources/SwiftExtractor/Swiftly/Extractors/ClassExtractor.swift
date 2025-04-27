@@ -17,6 +17,13 @@ extension SwiftExtractor {
         var propertiesExtractor: VariablesExtractor
         var genericParameterExtractor: GenericParamterExtractor? = nil
         var functionsExtractor: FunctionsExtractor
+        var parentClassNameExtractor: ParentClassNameExtractor
+        var classProtocolConformanceExtractor: ProtocolConformanceNameExtractor<ClassDeclSyntax>
+        var swiftTypeStorage: SwiftTypeStorageProtocol! {
+            didSet {
+                classProtocolConformanceExtractor.swiftTypeStorage = swiftTypeStorage
+            }
+        }
         required init?(syntax: ClassDeclSyntax, url: URL) {
             if let generics = syntax.genericParameterClause {
                 genericParameterExtractor = .init(syntax: generics, url: url)
@@ -26,6 +33,8 @@ extension SwiftExtractor {
             let members = syntax.members.members
             propertiesExtractor = .init(syntax: members, url: url)
             functionsExtractor = .init(syntax: members, url: url)
+            parentClassNameExtractor = .init(syntax: syntax, url: url)!
+            classProtocolConformanceExtractor = .init(syntax: syntax, url: url)!
         }
         private var generics: [Generic] {
             guard let genericParameter = genericParameterExtractor?.parse() else { return [] }
@@ -43,6 +52,14 @@ extension SwiftExtractor {
                 declarationSyntax: .classes(syntax),
                 generics: generics
             )
+        }
+        func parentClasses() -> [SwiftClassInheritance] {
+            let parent = parentClassNameExtractor.parse() ?? []
+            let parentClasses = parent.map { SwiftClassInheritance(url: self.url, comment: CommentExtractor(syntax: syntax, url: url)?.parse(), name: $0) }
+            return parentClasses
+        }
+        func conformances() -> [SwiftProtocolConformance] {
+            classProtocolConformanceExtractor.parse() ?? []
         }
     }
 }

@@ -11,6 +11,9 @@ let package = Package(
         .library(
             name: "SwiftExtractor",
             targets: ["SwiftExtractor"]),
+        .executable(
+            name: "autotest",
+            targets: ["SwiftExtractorExecutable"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", from: "508.0.0"),
@@ -27,6 +30,10 @@ let package = Package(
                 .product(name: "SwiftSyntaxParser", package: "swift-syntax"),
                 .product(name: "core_architecture", package: "core_architecture")
             ]),
+        .executableTarget(
+                    name: "SwiftExtractorExecutable",
+                    dependencies: ["SwiftExtractor"]
+                ),
         .testTarget(
             name: "SwiftExtractorTests",
             dependencies: [
